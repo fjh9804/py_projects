@@ -1,3 +1,20 @@
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+
+model_name = "facebook/nllb-200-distilled-600M"
+save_path = "./nllb_model_local"
+
+print("正在下载并保存模型...")
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+
+# 将模型保存到本地文件夹
+tokenizer.save_pretrained(save_path)
+model.save_pretrained(save_path)
+print(f"完成！请将 {save_path} 文件夹拷贝到离线机器。")
+
+
+
+
 import pandas as pd
 import torch
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
