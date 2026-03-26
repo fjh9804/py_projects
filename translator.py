@@ -4,6 +4,38 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 from tqdm import tqdm
 
 def offline_translate_excel(file_path):
+    # 【关键修改】：指向你拷贝过来的本地文件夹路径
+    local_model_path = "./nllb_model_local" 
+    
+    print(f"正在从本地路径加载模型: {local_model_path}...")
+    
+    # 这里的所有加载操作现在都是 100% 离线的
+    tokenizer = AutoTokenizer.from_pretrained(local_model_path)
+    model = AutoModelForSeq2SeqLM.from_pretrained(local_model_path)
+
+    device = 0 if torch.cuda.is_available() else -1
+    translator = pipeline(
+        "translation", 
+        model=model, 
+        tokenizer=tokenizer, 
+        src_lang="zho_Hans", 
+        tgt_lang="eng_Latn", 
+        max_length=400,
+        device=device
+    )
+
+    # ... 后续读取 Excel 和翻译的逻辑与之前一致 ...
+    # (此处省略重复的 pandas 处理逻辑)
+
+
+
+
+import pandas as pd
+import torch
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
+from tqdm import tqdm
+
+def offline_translate_excel(file_path):
     # 1. 加载本地模型 (第一次运行会自动下载)
     model_name = "facebook/nllb-200-distilled-600M"
     print(f"正在加载离线模型: {model_name}...")
